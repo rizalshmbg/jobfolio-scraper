@@ -6,6 +6,7 @@ from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 
 from ..normalizer import (
+    clean_html_text,
     normalize_employment_type,
     normalize_salary,
 )
@@ -165,13 +166,10 @@ def clean_text(value: str | None) -> str | None:
 def extract_description(
     content: str | None,
 ) -> str | None:
-    """
-    Keep JobStreet's full HTML description.
-    """
     if not content:
         return None
 
-    return content.strip() or None
+    return clean_html_text(content)
 
 
 def extract_requirements(
