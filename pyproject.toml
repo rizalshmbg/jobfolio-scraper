@@ -1,0 +1,15 @@
+[project]
+name = "jobfolio-scraper"
+version = "1.0.0"
+description = "JobFolio job scraper service"
+requires-python = ">=3.14,<3.15"
+
+dependencies = [
+    "fastapi[standard]",
+    "httpx",
+    "beautifulsoup4",
+    "pydantic-settings",
+]
+
+[tool.fastapi]
+entrypoint = "app.main:app"
