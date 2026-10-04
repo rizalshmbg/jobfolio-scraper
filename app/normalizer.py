@@ -199,3 +199,28 @@ def normalize_work_arrangement(
         return "ONSITE"
 
     return None
+
+
+def clean_html_text(value: str | None) -> str | None:
+    if not value:
+        return None
+
+    soup = BeautifulSoup(value, "html.parser")
+
+    for tag in soup.find_all("br"):
+        tag.replace_with("\n")
+
+    for tag in soup.find_all(
+        ["p", "div", "li", "h1", "h2", "h3", "h4", "h5", "h6"]
+    ):
+        tag.insert_before("\n")
+        tag.insert_after("\n")
+
+    text = soup.get_text()
+
+    text = text.replace("\u00a0", " ")
+    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r" *\n *", "\n", text)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+
+    return text.strip() or None
