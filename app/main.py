@@ -4,6 +4,8 @@ from pydantic import BaseModel, HttpUrl
 from .fetcher import fetch_job_page
 from .scrapers import scrape_by_platform
 
+from .config import settings
+
 
 app = FastAPI(
     title="JobFolio Scraper",
