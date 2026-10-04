@@ -2,6 +2,7 @@ import re
 from typing import Any
 
 from ..normalizer import (
+    clean_html_text,
     extract_requirements,
     normalize_employment_type,
     normalize_location,
@@ -75,9 +76,7 @@ def scrape_glints(
     return {
         "company": clean_text(company),
         "position": clean_text(position),
-        "description": description.strip()
-        if description
-        else None,
+        "description": clean_html_text(description),
         "requirements": extract_requirements(
             description
         ),
