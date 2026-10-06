@@ -7,8 +7,10 @@ EMPLOYMENT_TYPE_MAP = {
     "FULL_TIME": "FULL_TIME",
     "FULLTIME": "FULL_TIME",
     "FULL_TIME_EMPLOYEE": "FULL_TIME",
+    "FULL TIME": "FULL_TIME",
     "PART_TIME": "PART_TIME",
     "PARTTIME": "PART_TIME",
+    "PART TIME": "PART_TIME",
     "CONTRACT": "CONTRACT",
     "CONTRACTOR": "CONTRACT",
     "INTERNSHIP": "INTERNSHIP",
@@ -102,6 +104,35 @@ def normalize_salary(
     salary_max = max_value if max_value is not None else single_value
 
     return salary_min, salary_max
+
+
+def normalize_skills(
+    skills: Any,
+) -> list[str]:
+    if not skills:
+        return []
+
+    values = (
+        skills
+        if isinstance(skills, list)
+        else [skills]
+    )
+
+    result = []
+
+    for value in values:
+        if not isinstance(value, str):
+            continue
+
+        items = value.split(",")
+
+        for item in items:
+            skill = item.strip()
+
+            if skill:
+                result.append(skill)
+
+    return result
 
 
 def extract_requirements(
