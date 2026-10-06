@@ -176,8 +176,14 @@ def extract_requirements(
     content: str | None,
 ) -> list[str]:
     """
-    Extract the requirement list from the
-    'About you' section.
+    Extract requirements from JobStreet requirement sections.
+
+    Supported sections include:
+    - About you
+    - Kemampuan Teknis
+    - Kualifikasi
+    - Qualifications
+    - Requirements
     """
     if not content:
         return []
@@ -187,9 +193,21 @@ def extract_requirements(
         "html.parser",
     )
 
+    requirement_heading_patterns = [
+        "about you",
+        "kemampuan teknis",
+        "kualifikasi",
+        "qualifications",
+        "requirements",
+        "requirement",
+    ]
+
     headings = soup.find_all(
         ["p", "h1", "h2", "h3", "h4", "h5", "h6"]
     )
+
+    requirements: list[str] = []
+    seen: set[str] = set()
 
     for heading in headings:
         heading_text = heading.get_text(
@@ -197,29 +215,35 @@ def extract_requirements(
             strip=True,
         ).lower()
 
-        if heading_text != "about you":
+        is_requirement_section = any(
+            heading_text == pattern
+            or heading_text.startswith(pattern)
+            for pattern in requirement_heading_patterns
+        )
+
+        if not is_requirement_section:
             continue
 
-        # Find the first UL after "About you".
         next_list = heading.find_next("ul")
 
         if not next_list:
             continue
-
-        requirements: list[str] = []
 
         for item in next_list.find_all("li"):
             text = clean_text(
                 item.get_text(" ", strip=True)
             )
 
-            if text:
-                requirements.append(text)
+            if not text:
+                continue
 
-        if requirements:
-            return requirements
+            if text in seen:
+                continue
 
-    return []
+            seen.add(text)
+            requirements.append(text)
+
+    return requirements
 
 
 def normalize_jobstreet_work_arrangement(
@@ -296,14 +320,35 @@ def normalize_jobstreet_company(
 
 
 def normalize_jobstreet_salary(
-    job_details: dict[str, Any],
+    job: dict[str, Any],
 ) -> tuple[int | None, int | None]:
-    salary = job_details.get("salary")
+    salary = job.get("salary")
 
-    if salary is None:
+    if not isinstance(salary, dict):
         return None, None
 
-    return normalize_salary(salary)
+    label = salary.get("label")
+
+    if not isinstance(label, str):
+        return None, None
+
+    values = re.findall(
+        r"Rp\s*([\d.]+)",
+        label,
+    )
+
+    if not values:
+        return None, None
+
+    numbers = [
+        int(value.replace(".", ""))
+        for value in values
+    ]
+
+    if len(numbers) == 1:
+        return numbers[0], numbers[0]
+
+    return numbers[0], numbers[1]
 
 
 def scrape_jobstreet(
@@ -348,17 +393,15 @@ def scrape_jobstreet(
         content = None
 
     salary_min, salary_max = (
-        normalize_jobstreet_salary(
-            job_details
-        )
+        normalize_jobstreet_salary(job)
     )
 
     employment_type = None
 
-    # JobStreet's current workTypes for this sample
-    # are "Kasual", which does not map safely to the
-    # JobFolio employment type enum.
     work_types = job.get("workTypes")
+
+    if not isinstance(work_types, dict):
+        work_types = job_details.get("workTypes")
 
     if isinstance(work_types, dict):
         label = work_types.get("label")
