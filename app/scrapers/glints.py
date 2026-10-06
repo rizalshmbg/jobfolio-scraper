@@ -7,6 +7,7 @@ from ..normalizer import (
     normalize_employment_type,
     normalize_location,
     normalize_salary,
+    normalize_skills,
 )
 from ..parser import parse_job_posting_json_ld
 
@@ -73,13 +74,25 @@ def scrape_glints(
         job_posting.get("baseSalary")
     )
 
+    requirements = extract_requirements(
+        description
+    )
+
+    skills = normalize_skills(
+        job_posting.get("skills")
+    )
+
+    requirements.extend(
+        skill
+        for skill in skills
+        if skill not in requirements
+    )
+
     return {
         "company": clean_text(company),
         "position": clean_text(position),
         "description": clean_html_text(description),
-        "requirements": extract_requirements(
-            description
-        ),
+        "requirements": requirements,
         "jobUrl": url,
         "location": normalize_location(
             job_posting.get("jobLocation")
