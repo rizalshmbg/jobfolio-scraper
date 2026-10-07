@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File, Form
 from pydantic import BaseModel, HttpUrl
 
 from .fetcher import fetch_job_page
@@ -10,6 +10,11 @@ from .job.models import StructuredJob
 from .matching.api_models import MatchRequest, MatchResponse
 from .matching.matcher import match_resume_to_job
 from .resume.normalized_models import NormalizedResume
+
+import json
+
+from .matching.analyze_and_match import analyze_and_match
+from .matching.api_models import AnalyzeAndMatchResponse
 
 app = FastAPI(
     title="JobFolio Scraper",
@@ -99,4 +104,63 @@ async def match_resume(data: MatchRequest):
         raise HTTPException(
             status_code=500,
             detail="Unable to match resume to job",
+        ) from exc
+        
+        
+@app.post(
+    "/analyze-and-match",
+    response_model=AnalyzeAndMatchResponse,
+)
+async def analyze_and_match_endpoint(
+    resume: UploadFile = File(...),
+    job: str = Form(...),
+):
+    try:
+        job_data = json.loads(job)
+
+        file_bytes = await resume.read()
+
+        if not file_bytes:
+            raise HTTPException(
+                status_code=400,
+                detail="Resume file is empty",
+            )
+
+        if not resume.content_type:
+            raise HTTPException(
+                status_code=400,
+                detail="Resume file type is missing",
+            )
+
+        result = analyze_and_match(
+            file_bytes=file_bytes,
+            mime_type=resume.content_type,
+            job_data=job_data,
+        )
+
+        return {
+            "success": True,
+            "message": "Resume analyzed and matched successfully",
+            "data": result.__dict__,
+        }
+
+    except json.JSONDecodeError as exc:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid job JSON",
+        ) from exc
+
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=400,
+            detail=str(exc),
+        ) from exc
+
+    except HTTPException:
+        raise
+
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to analyze and match resume",
         ) from exc
