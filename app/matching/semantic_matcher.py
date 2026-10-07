@@ -154,27 +154,105 @@ Use exactly this structure:
 
 Rules:
 
-1. Compare the candidate's projects against the job responsibilities.
-2. Use ONLY information explicitly present in the candidate's project name and project descriptions.
-3. Do not use information from the candidate's work experience, education, skills, summary, or other projects.
-4. Do not invent project experience.
-5. Do not assume collaboration with designers, developers, or teams unless the project description explicitly states it.
-6. Do not assume backend integration unless the project description explicitly states API/backend integration.
-7. Do not assume responsive design unless the project description explicitly supports it.
-8. Use relevance values only:
-   - HIGH
-   - MEDIUM
-   - LOW
-9. HIGH means the project explicitly demonstrates experience directly relevant to the responsibility.
-10. MEDIUM means the project is meaningfully related but does not directly demonstrate the responsibility.
-11. LOW means there is only a weak relationship or insufficient evidence.
-12. matched must be true when relevance is HIGH or MEDIUM.
-13. matched must be false when relevance is LOW.
-14. Evidence must quote or closely paraphrase only information from the relevant project.
-15. Do not combine evidence from multiple projects into one evidence statement.
-16. Do not calculate a numerical score.
-17. Do not assume professional employment experience from a project.
-18. Consider the project name and project descriptions when determining relevance.
+1. Compare each job responsibility against the candidate's projects.
+
+2. The output must contain exactly one match for each job responsibility,
+   in the same order as the responsibilities.
+
+3. Use ONLY information explicitly present in the candidate's project
+   name and project descriptions.
+
+4. Do not use information from:
+   - candidate work experience
+   - candidate education
+   - candidate skills
+   - candidate summary
+   - other projects
+
+5. Do not invent project experience.
+
+6. Do not assume a technology, responsibility, or capability unless
+   the project information provides explicit evidence.
+
+7. Identify direct semantic relationships between the project
+   description and the job responsibility.
+
+8. Pay attention to equivalent wording and closely related concepts.
+
+   Examples:
+
+   - "integrated APIs"
+     is directly relevant to
+     "API integration"
+
+   - "fetch and display dynamic data"
+     is relevant to
+     "integrating APIs for dynamic data"
+
+   - "responsive user interface"
+     is relevant to
+     "developing responsive interfaces"
+
+   - "fixed bugs"
+     is relevant to
+     "bug fixing"
+
+   - "improved performance"
+     is relevant to
+     "performance improvement"
+
+9. Do not require the wording to be identical.
+
+10. A project can receive HIGH relevance when the project description
+    explicitly demonstrates the same responsibility or a very close
+    equivalent.
+
+11. Use MEDIUM when the project is meaningfully related to the
+    responsibility but does not explicitly demonstrate the full
+    responsibility.
+
+12. Use LOW when:
+    - there is only a weak relationship, or
+    - the project does not provide sufficient evidence.
+
+13. Use relevance values only:
+    - HIGH
+    - MEDIUM
+    - LOW
+
+14. matched must be true when relevance is HIGH or MEDIUM.
+
+15. matched must be false when relevance is LOW.
+
+16. Evidence must be based ONLY on the relevant project.
+
+17. Evidence must briefly explain the connection between the project
+    and the responsibility.
+
+18. Evidence must not contain information that is not present in the
+    project.
+
+19. Do not combine evidence from multiple projects into one evidence
+    statement.
+
+20. Do not assume professional employment experience from a project.
+
+21. Do not assume collaboration with designers, developers, or teams
+    unless explicitly stated in the project.
+
+22. Do not assume backend development unless explicitly stated.
+
+23. However, explicit API integration, API consumption, fetching data
+    from APIs, sending data through APIs, or similar API-related
+    project descriptions are valid evidence for responsibilities
+    involving API integration.
+
+24. Do not assume responsive design unless explicitly supported by the
+    project description.
+
+25. Consider both the project name and project description.
+
+26. Do not calculate a numerical score.
 
 Candidate projects:
 
