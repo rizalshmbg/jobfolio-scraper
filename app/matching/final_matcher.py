@@ -1,7 +1,8 @@
 from dataclasses import dataclass, field
 
+from ..job.models import SkillRequirement
 from .models import ExperienceMatchResult, SemanticMatch
-from .skill_matcher import SkillMatchResult
+from .skill_matcher import SkillMatchResult, calculate_skill_match
 
 EXPERIENCE_WEIGHT = 35.0
 REQUIRED_SKILLS_WEIGHT = 25.0
@@ -38,7 +39,7 @@ def calculate_final_match(
     project_result: ExperienceMatchResult,
     qualification_result: ExperienceMatchResult,
     resume_skills: list[str],
-    preferred_skills: list[str],
+    preferred_skills: list[SkillRequirement],
 ) -> FinalMatchResult:
 
     required_skills_score = required_skill_result.score
@@ -53,20 +54,22 @@ def calculate_final_match(
         (QUALIFICATIONS_WEIGHT, qualification_score),
     ]
 
-    resume_skill_set = set(resume_skills)
-    preferred_skill_set = set(preferred_skills)
+    if preferred_skills:
+        preferred_skill_result = calculate_skill_match(
+            resume_skills=resume_skills,
+            required_skills=preferred_skills,
+        )
 
-    if preferred_skill_set:
-        matched_preferred_skills = sorted(resume_skill_set & preferred_skill_set)
-
-        preferred_skills_score = (
-            len(matched_preferred_skills) / len(preferred_skill_set)
-        ) * 100
-
-        preferred_skills_score = round(preferred_skills_score, 2)
+        preferred_skills_score = preferred_skill_result.score
+        matched_preferred_skills = preferred_skill_result.matched
         preferred_skills_available = True
 
-        available_components.append((PREFERRED_SKILLS_WEIGHT, preferred_skills_score))
+        available_components.append(
+            (
+                PREFERRED_SKILLS_WEIGHT,
+                preferred_skills_score,
+            )
+        )
     else:
         matched_preferred_skills = []
         preferred_skills_score = None
