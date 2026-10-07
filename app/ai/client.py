@@ -1,4 +1,5 @@
 from google import genai
+from google.genai import types
 
 from ..core.config import settings
 
@@ -16,6 +17,11 @@ class GeminiClient:
         response = self.client.models.generate_content(
             model="gemini-3.5-flash-lite",
             contents=prompt,
+            config=types.GenerateContentConfig(
+                automatic_function_calling=types.AutomaticFunctionCallingConfig(
+                    disable=True,
+                ),
+            ),
         )
 
         return response.text or ""
