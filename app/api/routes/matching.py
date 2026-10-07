@@ -3,16 +3,8 @@ import json
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from pydantic import ValidationError
 
-from ...job.models import StructuredJob
 from ...matching.analyze_and_match import analyze_and_match
-from ...matching.api_models import (
-    AnalyzeAndMatchJob,
-    AnalyzeAndMatchResponse,
-    MatchRequest,
-    MatchResponse,
-)
-from ...matching.matcher import match_resume_to_job
-from ...resume.normalized_models import NormalizedResume
+from ...matching.api_models import AnalyzeAndMatchJob, AnalyzeAndMatchResponse
 
 router = APIRouter()
 
@@ -24,36 +16,6 @@ ALLOWED_RESUME_MIME_TYPES = {
     "application/msword",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 }
-
-
-@router.post("/match", response_model=MatchResponse)
-async def match_resume(data: MatchRequest):
-    try:
-        resume = NormalizedResume.model_validate(data.resume)
-        job = StructuredJob.model_validate(data.job)
-
-        result = match_resume_to_job(
-            resume=resume,
-            job=job,
-        )
-
-        return {
-            "success": True,
-            "message": "Resume matched successfully",
-            "data": result.__dict__,
-        }
-
-    except ValueError as exc:
-        raise HTTPException(
-            status_code=400,
-            detail=str(exc),
-        ) from exc
-
-    except Exception as exc:
-        raise HTTPException(
-            status_code=500,
-            detail="Unable to match resume to job",
-        ) from exc
 
 
 @router.post(
