@@ -1,6 +1,6 @@
 from google import genai
 
-from ..config import settings
+from ..core.config import settings
 
 
 class GeminiClient:
