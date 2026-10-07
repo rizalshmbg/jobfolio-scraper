@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel, HttpUrl, ValidationError
 
 from .fetcher import fetch_job_page
 from .scrapers import scrape_by_platform
@@ -14,7 +14,15 @@ from .resume.normalized_models import NormalizedResume
 import json
 
 from .matching.analyze_and_match import analyze_and_match
-from .matching.api_models import AnalyzeAndMatchResponse
+from .matching.api_models import AnalyzeAndMatchResponse, AnalyzeAndMatchJob
+
+MAX_RESUME_FILE_SIZE = 5 * 1024 * 1024
+
+ALLOWED_RESUME_MIME_TYPES = {
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+}
 
 app = FastAPI(
     title="JobFolio Scraper",
@@ -105,8 +113,8 @@ async def match_resume(data: MatchRequest):
             status_code=500,
             detail="Unable to match resume to job",
         ) from exc
-        
-        
+
+
 @app.post(
     "/analyze-and-match",
     response_model=AnalyzeAndMatchResponse,
@@ -116,7 +124,11 @@ async def analyze_and_match_endpoint(
     job: str = Form(...),
 ):
     try:
-        job_data = json.loads(job)
+        if resume.content_type not in ALLOWED_RESUME_MIME_TYPES:
+            raise HTTPException(
+                status_code=400,
+                detail="Resume file must be PDF, DOC, or DOCX",
+            )
 
         file_bytes = await resume.read()
 
@@ -126,16 +138,32 @@ async def analyze_and_match_endpoint(
                 detail="Resume file is empty",
             )
 
-        if not resume.content_type:
+        if len(file_bytes) > MAX_RESUME_FILE_SIZE:
             raise HTTPException(
                 status_code=400,
-                detail="Resume file type is missing",
+                detail="Resume file size must not exceed 5 MB",
             )
+
+        try:
+            job_json = json.loads(job)
+        except json.JSONDecodeError as exc:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid job JSON",
+            ) from exc
+
+        try:
+            job_data = AnalyzeAndMatchJob.model_validate(job_json)
+        except ValidationError as exc:
+            raise HTTPException(
+                status_code=422,
+                detail="Invalid job data",
+            ) from exc
 
         result = analyze_and_match(
             file_bytes=file_bytes,
             mime_type=resume.content_type,
-            job_data=job_data,
+            job_data=job_data.model_dump(),
         )
 
         return {
@@ -144,20 +172,14 @@ async def analyze_and_match_endpoint(
             "data": result.__dict__,
         }
 
-    except json.JSONDecodeError as exc:
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid job JSON",
-        ) from exc
+    except HTTPException:
+        raise
 
     except ValueError as exc:
         raise HTTPException(
             status_code=400,
             detail=str(exc),
         ) from exc
-
-    except HTTPException:
-        raise
 
     except Exception as exc:
         raise HTTPException(
