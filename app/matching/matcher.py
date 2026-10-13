@@ -10,7 +10,11 @@ from .semantic_matcher import (
     calculate_experience_match,
     calculate_project_match,
 )
-from .skill_matcher import calculate_skill_match
+from .skill_matcher import (
+    calculate_skill_match,
+    normalize_skill_name,
+    deduplicate_requirements,
+)
 
 ExperienceMatcher = Callable[
     [list[dict], list[str]],
@@ -40,9 +44,14 @@ def match_resume_to_job(
     # Required Skill Match
     # --------------------------------------------------
 
+    deduplicated_requirements = deduplicate_requirements(
+        job.requiredSkills
+    )
+
+
     required_skill_result = calculate_skill_match(
         resume_skills=resume.skills,
-        required_skills=job.requiredSkills,
+        required_skills=deduplicated_requirements,
     )
 
     # --------------------------------------------------

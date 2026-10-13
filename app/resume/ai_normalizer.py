@@ -64,10 +64,14 @@ Normalization rules:
    - Vue is NOT Vue Native.
    - Angular is NOT AngularJS.
 8. Keep skills as individual items.
-9. Do not turn a general concept into a specific technology unless the resume explicitly supports it.
-10. Preserve the original meaning of experience and project descriptions.
-11. Keep company names, positions, dates, and locations unchanged unless there is an obvious formatting variation.
-12. The purpose of normalization is to make later job matching more consistent, not to rewrite the resume.
+9. Include explicitly mentioned technical skills, programming languages, frameworks, libraries, and tools from the resume summary, experience descriptions, and project descriptions in the "skills" list.
+10. Only include a skill when the resume explicitly identifies that technology or tool. Do not infer skills from general activities or responsibilities.
+11. Normalize the names of these additional skills using the same canonical naming rules.
+12. Avoid duplicate skills after normalization.
+13. Do not turn a general concept into a specific technology unless the resume explicitly supports it.
+14. Preserve the original meaning of experience and project descriptions.
+15. Keep company names, positions, dates, and locations unchanged unless there is an obvious formatting variation.
+16. The purpose of normalization is to make later job matching more consistent, not to rewrite the resume.
 
 Structured resume:
 

@@ -224,72 +224,86 @@ Rules:
 
 9. Do not require the wording to be identical.
 
-10. A project can receive HIGH relevance when the project description
-    explicitly demonstrates the same responsibility or a very close
-    equivalent.
+10. Assign HIGH when the project explicitly demonstrates the main
+    activity described in the responsibility, or a very close
+    semantic equivalent, with specific supporting evidence.
 
-11. Use MEDIUM when the project is meaningfully related to the
-    responsibility but does not explicitly demonstrate the full
-    responsibility.
+11. Assign MEDIUM when the project explicitly supports a meaningful
+    part of a responsibility, but does not demonstrate the main
+    activity sufficiently for HIGH relevance.
 
-12. Use LOW when:
-    - there is only a weak relationship, or
-    - the project does not provide sufficient evidence.
+12. A responsibility may contain multiple activities or criteria.
+    Evaluate the overall relevance based on the evidence available
+    for the responsibility as a whole.
 
-13. Use relevance values only:
+13. Do not automatically assign LOW merely because one activity
+    within a combined responsibility is not documented, when other
+    explicitly documented activities are meaningfully relevant.
+
+14. Do not assign HIGH merely because the project uses the same
+    technology mentioned in the responsibility. The project must
+    also provide evidence of the relevant activity.
+
+15. Assign LOW when the project provides only a weak relationship
+    or insufficient evidence of meaningful relevance.
+
+16. Do not assume that missing information means the candidate
+    cannot perform the activity.
+
+17. Use relevance values only:
     - HIGH
     - MEDIUM
     - LOW
 
-14. matched must be true when relevance is HIGH or MEDIUM.
+18. matched must be true when relevance is HIGH or MEDIUM.
 
-15. matched must be false when relevance is LOW.
+19. matched must be false when relevance is LOW.
 
-16. Evidence must be based ONLY on the relevant project.
+20. Evidence must be based ONLY on the relevant project.
 
-17. Evidence must briefly explain the connection between the project
+21. Evidence must briefly explain the connection between the project
     and the responsibility.
 
-18. Evidence must not contain information that is not present in the
+22. Evidence must not contain information that is not present in the
     project.
 
-19. Do not combine evidence from multiple projects into one evidence
+23. Do not combine evidence from multiple projects into one evidence
     statement.
 
-20. Do not assume professional employment experience from a project.
+24. Do not assume professional employment experience from a project.
 
-21. Do not assume collaboration with designers, developers, or teams
+25. Do not assume collaboration with designers, developers, or teams
     unless explicitly stated in the project.
 
-22. Do not assume backend development unless explicitly stated.
+26. Do not assume backend development unless explicitly stated.
 
-23. However, explicit API integration, API consumption, fetching data
+27. However, explicit API integration, API consumption, fetching data
     from APIs, sending data through APIs, or similar API-related
     project descriptions are valid evidence for responsibilities
     involving API integration.
 
-24. Do not assume responsive design unless explicitly supported by the
+28. Do not assume responsive design unless explicitly supported by the
     project description.
 
-25. Consider both the project name and project description.
+29. Consider both the project name and project description.
 
-26. Do not calculate a numerical score.
+30. Do not calculate a numerical score.
 
-27. Every match must include a non-empty evidence array.
+31. Every match must include a non-empty evidence array.
 
-28. For HIGH or MEDIUM relevance, evidence must identify specific
+32. For HIGH or MEDIUM relevance, evidence must identify specific
     information in the relevant project that supports the match.
 
-29. For LOW relevance, evidence must briefly explain why the provided
+33. For LOW relevance, evidence must briefly explain why the provided
     project information does not sufficiently support the responsibility.
 
-30. Do not invent project details or candidate capabilities.
+34. Do not invent project details or candidate capabilities.
 
-31. If information is missing, describe only what cannot be established
+35. If information is missing, describe only what cannot be established
     from the provided project data. Do not claim that the candidate
     lacks a capability merely because it is not mentioned.
 
-32. Evidence must be a list of concise strings, not an empty list.
+36. Evidence must be a list of concise strings, not an empty list.
 
 Candidate projects:
 
