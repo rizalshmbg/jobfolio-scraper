@@ -47,6 +47,25 @@ Rules:
 16. Do not treat related experience as proof of a qualification when the qualification requires a specific level of knowledge, proficiency, certification, or condition.
 17. For example, experience building responsive interfaces may support "responsive web design knowledge", but should not automatically be treated as explicit proof of "good understanding".
 18. Evidence must distinguish between explicit qualification evidence and related supporting evidence.
+19. Every match must include a non-empty evidence array.
+
+20. For HIGH relevance, evidence must identify explicit resume information
+    that satisfies the qualification.
+
+21. For MEDIUM relevance, evidence must identify related resume information
+    and explain why it only partially supports the qualification.
+
+22. For LOW relevance, evidence must explain why the provided resume data
+    does not sufficiently establish the qualification.
+
+23. Do not invent qualifications, experience, education, or skills.
+
+24. If information is missing, describe only what cannot be established
+    from the provided data. Do not claim that the candidate lacks a
+    qualification merely because it is not mentioned.
+
+25. Evidence must be a list of concise strings, not an empty list.
+
 
 Candidate education:
 

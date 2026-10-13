@@ -39,8 +39,29 @@ Rules:
 8. LOW means there is only a weak relationship.
 9. matched must be true when relevance is HIGH or MEDIUM.
 10. matched must be false when relevance is LOW.
-11. Evidence must briefly explain why the experience is relevant.
-12. Do not calculate a numerical score.
+11. Every match must include a non-empty evidence array.
+
+12. For HIGH relevance, evidence must identify specific information
+    from the candidate's experience that directly supports the match.
+
+13. For MEDIUM relevance, evidence must identify specific information
+    from the candidate's experience that supports the partial match.
+
+14. For LOW relevance, evidence must briefly explain why the provided
+    experience does not sufficiently support the responsibility.
+
+15. Evidence must be based only on the candidate experience provided
+    in the input.
+
+16. Do not invent experience, skills, technologies, or facts.
+
+17. If information is missing, describe only what cannot be established
+    from the provided data. Do not claim that the candidate lacks a
+    capability merely because it is not mentioned in the resume.
+
+18. Evidence must be a list of concise strings, not an empty list.
+
+19. Do not calculate a numerical score.
 
 Candidate experience:
 
@@ -253,6 +274,22 @@ Rules:
 25. Consider both the project name and project description.
 
 26. Do not calculate a numerical score.
+
+27. Every match must include a non-empty evidence array.
+
+28. For HIGH or MEDIUM relevance, evidence must identify specific
+    information in the relevant project that supports the match.
+
+29. For LOW relevance, evidence must briefly explain why the provided
+    project information does not sufficiently support the responsibility.
+
+30. Do not invent project details or candidate capabilities.
+
+31. If information is missing, describe only what cannot be established
+    from the provided project data. Do not claim that the candidate
+    lacks a capability merely because it is not mentioned.
+
+32. Evidence must be a list of concise strings, not an empty list.
 
 Candidate projects:
 
