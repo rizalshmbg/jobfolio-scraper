@@ -10,6 +10,8 @@ dependencies = [
     "beautifulsoup4",
     "pydantic-settings",
     "google-genai",
+    "python-docx",
+    "pypdf",
 ]
 
 [tool.fastapi]
