@@ -81,11 +81,6 @@ async def fetch_job_page(url: str) -> str:
             headers=headers,
         ) as client:
             response = await client.get(url)
-            print("Requested URL:", url)
-            print("Status Code:", response.status_code)
-            print("Final URL:", response.url)
-            print("Response Headers:", response.headers)
-            print("Response Body:", response.text[:500])
 
     except httpx.TimeoutException as exc:
         raise TimeoutError("Job page request timed out") from exc
