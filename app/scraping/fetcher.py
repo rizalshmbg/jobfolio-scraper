@@ -77,7 +77,7 @@ async def fetch_job_page(url: str) -> str:
     try:
         async with httpx.AsyncClient(
             timeout=timeout,
-            follow_redirects=False,
+            follow_redirects=True,
             headers=headers,
         ) as client:
             response = await client.get(url)
