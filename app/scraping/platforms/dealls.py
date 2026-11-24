@@ -72,13 +72,18 @@ def extract_section(
     return []
 
 
-def extract_work_arrangement(soup: BeautifulSoup) -> str | None:
+def extract_work_arrangement(
+    soup: BeautifulSoup,
+) -> str | None:
     job_header = soup.find(id="job-header")
 
     if not job_header:
         return None
 
-    header_text = job_header.get_text(" ", strip=True)
+    header_text = job_header.get_text(
+        " ",
+        strip=True,
+    )
 
     return normalize_work_arrangement(
         job_location_type=None,
@@ -87,12 +92,16 @@ def extract_work_arrangement(soup: BeautifulSoup) -> str | None:
     )
 
 
-def scrape_dealls(html: str, url: str) -> StructuredJob:
+def scrape_dealls(
+    html: str,
+    url: str,
+) -> StructuredJob:
     soup = BeautifulSoup(html, "html.parser")
 
     job_data = extract_job_posting(soup)
 
     organization = job_data.get("hiringOrganization")
+
     company = organization.get("name") if isinstance(organization, dict) else None
 
     responsibilities = extract_section(
@@ -100,20 +109,21 @@ def scrape_dealls(html: str, url: str) -> StructuredJob:
         "Deskripsi Pekerjaan",
     )
 
-    qualifications = extract_section(
+    requirements = extract_section(
         soup,
         "Kualifikasi",
     )
 
-    description = "\n".join(responsibilities) or None
+    description = "\n".join(responsibilities) if responsibilities else None
 
     return StructuredJob(
-        title=job_data.get("title"),
         company=company,
+        position=job_data.get("title"),
         description=description,
+        requirements=requirements,
+        responsibilities=responsibilities,
+        jobUrl=url,
         location=normalize_location(job_data.get("jobLocation")),
         employmentType=normalize_employment_type(job_data.get("employmentType")),
         workArrangement=extract_work_arrangement(soup),
-        responsibilities=responsibilities,
-        qualifications=qualifications,
     )

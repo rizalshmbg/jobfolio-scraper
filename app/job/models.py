@@ -9,13 +9,20 @@ class SkillRequirement(BaseModel):
 
 
 class StructuredJob(BaseModel):
-    title: str | None = None
     company: str | None = None
+    position: str | None = None
     description: str | None = None
+
+    requirements: list[str] = Field(default_factory=list)
+    responsibilities: list[str] = Field(default_factory=list)
+
+    jobUrl: str | None = None
     location: str | None = None
     employmentType: str | None = None
     workArrangement: str | None = None
+
+    salaryMin: int | None = None
+    salaryMax: int | None = None
+
     requiredSkills: list[SkillRequirement] = Field(default_factory=list)
     preferredSkills: list[SkillRequirement] = Field(default_factory=list)
-    responsibilities: list[str] = Field(default_factory=list)
-    qualifications: list[str] = Field(default_factory=list)
