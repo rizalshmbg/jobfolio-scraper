@@ -1,5 +1,6 @@
 from urllib.parse import urlparse
 
+from .dealls import scrape_dealls
 from .glints import scrape_glints
 from .jobstreet import scrape_jobstreet
 from .kalibrr import scrape_kalibrr
@@ -8,6 +9,9 @@ from .kalibrr import scrape_kalibrr
 def detect_platform(url: str) -> str:
     hostname = urlparse(url).hostname or ""
     hostname = hostname.lower()
+    
+    if hostname == "dealls.com" or hostname.endswith(".dealls.com"):
+        return "dealls"
 
     if "kalibrr" in hostname:
         return "kalibrr"
@@ -26,6 +30,9 @@ def scrape_by_platform(
     url: str,
 ) -> dict:
     platform = detect_platform(url)
+    
+    if platform == "dealls":
+        return scrape_dealls(html, url)
 
     if platform == "kalibrr":
         return scrape_kalibrr(html, url)
